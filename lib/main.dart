@@ -32,6 +32,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Widget> pages = [Page1(), const Page2(), const Page3()];
 
+  final pageOneScreen = GlobalKey<NavigatorState>();
+  final pageTwoScreen = GlobalKey<NavigatorState>();
+  final pageThreeScreen = GlobalKey<NavigatorState>();
+
   int currentIndex = 0;
   late Widget activeWidget;
 
@@ -41,12 +45,37 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _onTap(int val, BuildContext context) {
+    if (currentIndex == val) {
+      switch (val) {
+        case 0:
+          pageOneScreen.currentState?.popUntil((route) => route.isFirst);
+          break;
+        case 1:
+          pageTwoScreen.currentState?.popUntil((route) => route.isFirst);
+          break;
+        case 2:
+          pageThreeScreen.currentState?.popUntil((route) => route.isFirst);
+          break;
+        default:
+      }
+    } else {
+      if (mounted) {
+        setState(() {
+          currentIndex = val;
+        });
+      }
+    }}
+
   @override
   Widget build(BuildContext context) {
+
+
+
     activeWidget = pages[currentIndex];
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) => navigateByInt(index),
+        onTap: (val) => _onTap(val, context),
         currentIndex: currentIndex,
         items: const [
           BottomNavigationBarItem(
@@ -63,35 +92,48 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      appBar: AppBar(
-        title: Text(widget.title),
+      body: IndexedStack(
+        index: currentIndex,
+        children:[
+          Navigator(key: pageOneScreen,
+        onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => Page1(),settings: route)
+        ),
+      Navigator(key: pageTwoScreen,
+        onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Page2(),settings: route),
       ),
-      body: Center(
-        child: activeWidget,
+      Navigator(key: pageThreeScreen,
+        onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Page3(),settings: route),
+          ),
+        ],
       ),
     );
   }
 }
+
+
 
 class Page1 extends StatelessWidget {
   Page1({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        child: Container(
-          height: 100,
-          width: 100,
-          color: Colors.red,
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Details(),
-            ),
-          );
-        });
+    return Scaffold(
+      appBar: AppBar(title: const Text("PAGE 1")),
+      body: GestureDetector(
+          child: Container(
+            height: 100,
+            width: 100,
+            color: Colors.red,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Details(),
+              ),
+            );
+          }),
+    );
   }
 }
 
@@ -100,10 +142,13 @@ class Page2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width: 100,
-      color: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(title: const Text("PAGE 2")),
+      body: Container(
+        height: 100,
+        width: 100,
+        color: Colors.blue,
+      ),
     );
   }
 }
@@ -113,10 +158,13 @@ class Page3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width: 100,
-      color: Colors.green,
+    return Scaffold(
+      appBar: AppBar(title: const Text("PAGE 3")),
+      body: Container(
+        height: 100,
+        width: 100,
+        color: Colors.green,
+      ),
     );
   }
 }
@@ -128,7 +176,7 @@ class Details extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Whatever'),
+        title: const Text('Details'),
       ),
       body: Container(
         child: const Text('Whatever'),
