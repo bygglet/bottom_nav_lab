@@ -58,9 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
         case 2:
           pageThreeScreen.currentState?.popUntil((route) => route.isFirst);
           break;
-        case 3:
-          modalPageScreen.currentState?.popUntil((route) => route.isFirst);
-          break;
         default:
 
 
@@ -89,7 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.cancel),
             label: '0',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.sailing),label: "modal",),
           BottomNavigationBarItem(
             icon: Icon(Icons.stream),
             label: '2',
