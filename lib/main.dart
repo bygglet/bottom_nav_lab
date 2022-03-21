@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final pageOneScreen = GlobalKey<NavigatorState>();
   final pageTwoScreen = GlobalKey<NavigatorState>();
   final pageThreeScreen = GlobalKey<NavigatorState>();
+  final modalPageScreen = GlobalKey<NavigatorState>();
 
   int currentIndex = 0;
   late Widget activeWidget;
@@ -57,7 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
         case 2:
           pageThreeScreen.currentState?.popUntil((route) => route.isFirst);
           break;
+        case 3:
+          modalPageScreen.currentState?.popUntil((route) => route.isFirst);
+          break;
         default:
+
+
       }
     } else {
       if (mounted) {
@@ -65,16 +71,17 @@ class _MyHomePageState extends State<MyHomePage> {
           currentIndex = val;
         });
       }
-    }}
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
-
-
     activeWidget = pages[currentIndex];
     return Scaffold(
+      floatingActionButton: const Modal(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.grey,
         onTap: (val) => _onTap(val, context),
         currentIndex: currentIndex,
         items: const [
@@ -82,30 +89,57 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.cancel),
             label: '0',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: '1',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.sailing),label: "modal",),
           BottomNavigationBarItem(
             icon: Icon(Icons.stream),
             label: '2',
           ),
+
+
         ],
       ),
       body: IndexedStack(
         index: currentIndex,
-        children:[
-          Navigator(key: pageOneScreen,
-        onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => Page1(),settings: route)
-        ),
-      Navigator(key: pageTwoScreen,
-        onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Page2(),settings: route),
-      ),
-      Navigator(key: pageThreeScreen,
-        onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Page3(),settings: route),
+        children: [
+          Navigator(key: pageOneScreen, onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => Page1(), settings: route)),
+          Navigator(
+            key: pageTwoScreen,
+            onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Page2(), settings: route),
+          ),
+          Navigator(key: modalPageScreen,
+            onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Modal(), settings: route),
+          ),
+          Navigator(
+            key: pageThreeScreen,
+            onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Page3(), settings: route),
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class Modal extends StatelessWidget {
+  const Modal({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      child: const Icon(Icons.star),
+      onPressed: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Container(
+                  height: 100,
+                  width: 100,
+                  color: Colors.yellow,
+                  child: ElevatedButton(child: const Text("lägg till"), onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Page3()));
+                  }));
+            });
+      },
     );
   }
 }
@@ -118,7 +152,7 @@ class Page1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("PAGE 1")),
+      appBar: AppBar(title: const Text("Dashboard")),
       body: GestureDetector(
           child: Container(
             height: 100,
@@ -143,7 +177,7 @@ class Page2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("PAGE 2")),
+      appBar: AppBar(title: const Text("Menu")),
       body: Container(
         height: 100,
         width: 100,
@@ -176,7 +210,7 @@ class Details extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Details'),
+        title: const Text('Timeregistration'),
       ),
       body: Container(
         child: const Text('Whatever'),
