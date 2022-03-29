@@ -59,8 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
           pageThreeScreen.currentState?.popUntil((route) => route.isFirst);
           break;
         default:
-
-
       }
     } else {
       if (mounted) {
@@ -90,31 +88,15 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.stream),
             label: '2',
           ),
-
-
         ],
       ),
       body: IndexedStack(
         index: currentIndex,
-        children: [
-          Navigator(key: pageOneScreen, onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => Page1(), settings: route)),
-          Navigator(
-            key: pageTwoScreen,
-            onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Page2(), settings: route),
-          ),
-          Navigator(key: modalPageScreen,
-            onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Modal(), settings: route),
-          ),
-          Navigator(
-            key: pageThreeScreen,
-            onGenerateRoute: (route) => MaterialPageRoute(builder: (BuildContext context) => const Page3(), settings: route),
-          ),
-        ],
+        children: [Page1(), const Page2(), const Page3()],
       ),
     );
   }
 }
-
 
 class Modal extends StatelessWidget {
   const Modal({Key? key}) : super(key: key);
@@ -131,16 +113,16 @@ class Modal extends StatelessWidget {
                   height: 100,
                   width: 100,
                   color: Colors.yellow,
-                  child: ElevatedButton(child: const Text("lägg till"), onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Page3()));
-                  }));
+                  child: ElevatedButton(
+                      child: const Text("lägg till"),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Page3()));
+                      }));
             });
       },
     );
   }
 }
-
-
 
 class Page1 extends StatelessWidget {
   Page1({Key? key}) : super(key: key);
